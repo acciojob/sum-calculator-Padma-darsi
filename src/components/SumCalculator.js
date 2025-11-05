@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from "react";
 
 const SumCalculator = () => {
-  const [numbers, setNumbers] = useState([]); // store all input numbers
-  const [currentInput, setCurrentInput] = useState(""); // current input value
-  const [sum, setSum] = useState(0); // store the total sum
+  const [numbers, setNumbers] = useState([]); // store all numbers
+  const [currentInput, setCurrentInput] = useState(""); // current input
+  const [sum, setSum] = useState(0); // total sum
 
   // Handle input change
   const handleChange = (e) => {
     setCurrentInput(e.target.value);
   };
 
-  // Handle adding a number to the list
+  // Add number to the list
   const handleAddNumber = () => {
-    const parsedNumber = parseInt(currentInput, 10);
-    if (!isNaN(parsedNumber)) {
-      setNumbers((prevNumbers) => [...prevNumbers, parsedNumber]);
+    const parsed = parseFloat(currentInput); // allow decimals
+    if (!isNaN(parsed)) {
+      setNumbers((prev) => [...prev, parsed]);
       setCurrentInput(""); // clear input
+    }
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleAddNumber();
     }
   };
 
@@ -24,32 +31,22 @@ const SumCalculator = () => {
     let isCancelled = false;
 
     const calculateSum = async () => {
-      // Simulate async calculation with setTimeout
       const result = await new Promise((resolve) => {
         setTimeout(() => {
           const total = numbers.reduce((acc, num) => acc + num, 0);
           resolve(total);
-        }, 0); // 0ms delay ensures async but non-blocking
+        }, 0); // async but non-blocking
       });
 
-      if (!isCancelled) {
-        setSum(result);
-      }
+      if (!isCancelled) setSum(result);
     };
 
     calculateSum();
 
     return () => {
-      isCancelled = true; // cleanup to prevent state update if component unmounted
+      isCancelled = true;
     };
   }, [numbers]);
-
-  // Handle pressing Enter key to add number
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleAddNumber();
-    }
-  };
 
   return (
     <div style={{ maxWidth: "400px", margin: "20px auto", textAlign: "center" }}>
