@@ -1,4 +1,3 @@
-
 import React from "react";
 import SumCalculator from "./SumCalculator";
 import "./../styles/App.css";
