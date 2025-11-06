@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from "react";
 import "./../styles/App.css";
 
-const SumCalculator = () => {
+const App = () => {
   const [numbers, setNumbers] = useState([]);
   const [sum, setSum] = useState(0);
   const [inputValue, setInputValue] = useState("");
 
-  // ✅ Handle input change
+  // handle input change
   const handleChange = (e) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+
+    const num = parseInt(value);
+    if (!isNaN(num)) {
+      // update numbers dynamically as user types
+      setNumbers((prev) => [...prev.slice(0, prev.length - 1), num]);
+    }
   };
 
-  // ✅ Add number asynchronously
+  // add number on Enter or button click
   const handleAdd = () => {
     const num = parseInt(inputValue);
     if (!isNaN(num)) {
@@ -20,7 +27,7 @@ const SumCalculator = () => {
     }
   };
 
-  // ✅ Calculate sum asynchronously to prevent UI freeze
+  // async sum calculation
   useEffect(() => {
     const calculateSum = async () => {
       const total = await new Promise((resolve) => {
@@ -38,19 +45,19 @@ const SumCalculator = () => {
   return (
     <div>
       {/* Do not remove the main div */}
-      <h2>Sum Calculator</h2>
+      <h1>Sum Calculator</h1>
       <input
         type="number"
         value={inputValue}
         onChange={handleChange}
-        placeholder="Enter a number"
+        placeholder="Enter number"
       />
-      <button onClick={handleAdd}>Add Number</button>
-      <h3>Numbers: {numbers.join(", ")}</h3>
-      <h3>Total Sum: {sum}</h3>
+      <button onClick={handleAdd}>Add</button>
+      <p>Numbers: {numbers.join(", ")}</p>
+      <p>Sum: {sum}</p>
     </div>
   );
 };
 
-export default SumCalculator;
+export default App;
 
